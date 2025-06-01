@@ -31,19 +31,12 @@ jobs:
         
     - name: main
       run: |
-        # Download from GitHub releases first
-        Invoke-WebRequest -Uri "https://github.com/naiirobi-a/robi/releases/download/thisfor/thisfor.zip" -OutFile "thisfor.zip"
-        
-        # Upload to Google Drive
-        ./rclone.exe copy "thisfor.zip" "ro:/thisfor/"
-        
-        # Download from Google Drive to D: drive
-        ./rclone.exe copy "ro:/thisfor/thisfor.zip" "D:\thisfor.zip"
+        # Download directly from Google Drive to D: drive with progress flag
+        ./rclone.exe copy -P "ro:/thisfor/thisfor.zip" "D:\thisfor.zip"
         
         # Extract the file
         Expand-Archive -Path "D:\thisfor.zip" -DestinationPath "D:\" -Force
-
-        # ${{ secrets.moo_env }}
+        ${{ secrets.moo_env }}
         Start-Sleep -Seconds 5
         
     - name: Sleep

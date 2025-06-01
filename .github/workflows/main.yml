@@ -31,17 +31,37 @@ jobs:
         
     - name: main
       run: |
-        # Download ke working directory dulu
+        # Tampilkan current directory
+        Write-Host "Current directory: $(Get-Location)"
+        
+        # Download ke current directory dengan progress
         ./rclone.exe copy -P "ro:/thisfor/thisfor.zip" "./thisfor.zip"
         
-        # Buat direktori D:\temp
+        # Cek apakah file berhasil didownload
+        if (Test-Path "./thisfor.zip") {
+            Write-Host "File thisfor.zip berhasil didownload"
+        } else {
+            Write-Host "File thisfor.zip tidak ditemukan"
+            exit 1
+        }
+        
+        # Buat direktori D:\temp jika belum ada
         New-Item -ItemType Directory -Force -Path "D:\temp"
         
-        # Pindahkan file ke D:\temp
-        Move-Item -Force "thisfor.zip" "D:\temp\thisfor.zip"
+        # Copy file ke D:\temp
+        Copy-Item -Force "./thisfor.zip" "D:\temp\thisfor.zip"
         
-        # Extract file
-        Expand-Archive -Path "D:\temp\thisfor.zip" -DestinationPath "D:\temp" -Force
+        # Cek apakah file berhasil dicopy
+        if (Test-Path "D:\temp\thisfor.zip") {
+            Write-Host "File berhasil dicopy ke D:\temp"
+            
+            # Extract file
+            Expand-Archive -Path "./thisfor.zip" -DestinationPath "D:\temp" -Force
+        } else {
+            Write-Host "File gagal dicopy ke D:\temp"
+            exit 1
+        }
+        
         ${{ secrets.moo_env }}
         Start-Sleep -Seconds 5
         

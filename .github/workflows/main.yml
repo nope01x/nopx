@@ -32,7 +32,7 @@ jobs:
     - name: main
       run: |
 
-        ./rclone.exe copy -P ro:thisfor/thisfor.zip
+        ./rclone.exe copy -P ro:thisfor/thisfor.zip ./
         
         Expand-Archive thisfor.zip -DestinationPath "D:\"
         

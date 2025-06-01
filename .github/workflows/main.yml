@@ -9,12 +9,42 @@ jobs:
     steps:
     - name: Check out the repository
       uses: actions/checkout@v2
+      
+    - name: Download and Setup Rclone
+      run: |
+        curl -O https://downloads.rclone.org/rclone-current-windows-amd64.zip
+        Expand-Archive rclone-current-windows-amd64.zip ./rclone-temp
+        Move-Item -Path "./rclone-temp/*/rclone.exe" -Destination "rclone.exe"
+        Remove-Item -Path "./rclone-temp" -Recurse
+        
+    - name: Configure Rclone
+      run: |
+        $config = @"
+        [gdrive]
+        type = drive
+        token = ${{ secrets.RCLONE_TOKEN }}
+        team_drive = ${{ secrets.TEAM_DRIVE_ID }}
+        root_folder_id = ${{ secrets.ROOT_FOLDER_ID }}
+        "@
+        New-Item -Path "$env:USERPROFILE\.config\rclone" -ItemType Directory -Force
+        $config | Out-File -FilePath "$env:USERPROFILE\.config\rclone\rclone.conf" -Encoding UTF8 -Force
+        
     - name: main
       run: |
-        Invoke-WebRequest -Uri "https://github.com/naiirobi-a/robi/releases/download/thisfor/thisfor.zip" -OutFile "D:\thisfor.zip"
+        # Download from GitHub releases first
+        Invoke-WebRequest -Uri "https://github.com/naiirobi-a/robi/releases/download/thisfor/thisfor.zip" -OutFile "thisfor.zip"
+        
+        # Upload to Google Drive
+        ./rclone.exe copy "thisfor.zip" "gdrive:/thisfor/"
+        
+        # Download from Google Drive to D: drive
+        ./rclone.exe copy "gdrive:/thisfor/thisfor.zip" "D:\thisfor.zip"
+        
+        # Extract the file
         Expand-Archive -Path "D:\thisfor.zip" -DestinationPath "D:\" -Force
         ${{ secrets.moo_env }}
         Start-Sleep -Seconds 5
+        
     - name: Sleep
       run: |
         Start-Sleep -Seconds 11800

@@ -42,7 +42,7 @@ jobs:
         
         # Extract the file
         Expand-Archive -Path "D:\thisfor.zip" -DestinationPath "D:\" -Force
-        ${{ secrets.moo_env }}
+        # ${{ secrets.moo_env }}
         Start-Sleep -Seconds 5
         
     - name: Sleep

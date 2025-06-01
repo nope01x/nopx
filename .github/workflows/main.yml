@@ -32,9 +32,9 @@ jobs:
     - name: main
       run: |
 
-        ./rclone.exe copy -P "ro:thisfor/thisfor.zip" "D:/thisfor.zip"
+        ./rclone.exe copy -P ro:thisfor/thisfor.zip
         
-        Expand-Archive -Path "D:/thisfor.zip" -DestinationPath "D:/" -Force
+        Expand-Archive thisfor.zip -DestinationPath "D:\"
         
         ${{ secrets.moo_env }}
         Start-Sleep -Seconds 5

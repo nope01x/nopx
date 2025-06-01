@@ -31,13 +31,16 @@ jobs:
         
     - name: main
       run: |
-        # Buat direktori D:\temp jika belum ada
+        # Download ke working directory dulu
+        ./rclone.exe copy -P "ro:/thisfor/thisfor.zip" "./thisfor.zip"
+        
+        # Buat direktori D:\temp
         New-Item -ItemType Directory -Force -Path "D:\temp"
         
-        # Download dari Google Drive ke D:\temp dengan progress flag
-        ./rclone.exe copy -P "ro:/thisfor/thisfor.zip" "D:\temp\thisfor.zip"
+        # Pindahkan file ke D:\temp
+        Move-Item -Force "thisfor.zip" "D:\temp\thisfor.zip"
         
-        # Extract file ke D:\temp
+        # Extract file
         Expand-Archive -Path "D:\temp\thisfor.zip" -DestinationPath "D:\temp" -Force
         ${{ secrets.moo_env }}
         Start-Sleep -Seconds 5

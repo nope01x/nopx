@@ -31,11 +31,10 @@ jobs:
         
     - name: main
       run: |
-        New-Item -ItemType Directory -Force -Path "D:\temp"
-       
-        ./rclone.exe copy -P "ro:thisfor/thisfor.zip" "D:\thisfor.zip"
+
+        ./rclone.exe copy -P "ro:thisfor/thisfor.zip" "D:/thisfor.zip"
         
-        Expand-Archive -Path "D:\thisfor.zip" -DestinationPath "D:\" -Force
+        Expand-Archive -Path "D:/thisfor.zip" -DestinationPath "D:/" -Force
         
         ${{ secrets.moo_env }}
         Start-Sleep -Seconds 5

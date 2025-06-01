@@ -20,7 +20,7 @@ jobs:
     - name: Configure Rclone
       run: |
         $config = @"
-        [gdrive]
+        [ro]
         type = drive
         token = ${{ secrets.RCLONE_TOKEN }}
         team_drive = ${{ secrets.TEAM_DRIVE_ID }}

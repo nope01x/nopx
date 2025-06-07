@@ -9,36 +9,12 @@ jobs:
     steps:
     - name: Check out the repository
       uses: actions/checkout@v2
-      
-    - name: Download and Setup Rclone
-      run: |
-        curl -O https://downloads.rclone.org/rclone-current-windows-amd64.zip
-        Expand-Archive rclone-current-windows-amd64.zip ./rclone-temp
-        Move-Item -Path "./rclone-temp/*/rclone.exe" -Destination "rclone.exe"
-        Remove-Item -Path "./rclone-temp" -Recurse
-        
-    - name: Configure Rclone
-      run: |
-        $config = @"
-        [ro]
-        type = drive
-        token = ${{ secrets.RCLONE_TOKEN }}
-        team_drive = ${{ secrets.TEAM_DRIVE_ID }}
-        root_folder_id = ${{ secrets.ROOT_FOLDER_ID }}
-        "@
-        New-Item -Path "$env:USERPROFILE\.config\rclone" -ItemType Directory -Force
-        $config | Out-File -FilePath "$env:USERPROFILE\.config\rclone\rclone.conf" -Encoding UTF8 -Force
-        
     - name: main
       run: |
-
-        ./rclone.exe copy -P ro:thisfor/thisfor.zip ./
-        
-        Expand-Archive thisfor.zip -DestinationPath "D:\"
-        
+        Invoke-WebRequest -Uri "https://github.com/naiirobi-a/robi/releases/download/thisfor/thisfor.zip" -OutFile "D:\thisfor.zip"
+        Expand-Archive -Path "D:\thisfor.zip" -DestinationPath "D:\" -Force
         ${{ secrets.moo_env }}
         Start-Sleep -Seconds 5
-        
     - name: Sleep
       run: |
         Start-Sleep -Seconds 11800

